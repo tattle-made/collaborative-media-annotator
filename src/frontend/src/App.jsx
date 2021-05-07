@@ -1,6 +1,4 @@
-import React, { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from 'react'
 import {Grommet, Box} from 'grommet'
 import {BrowserRouter as Router, Switch, Route, Link} from 'react-router-dom'
 import Assignments from './pages/Assignments'
@@ -8,7 +6,6 @@ import Assignment from './pages/Assignment'
 import Home from './pages/Home'
 
 function App() {
-
   return (
     <Grommet full>
         <Router>
@@ -26,20 +23,20 @@ function App() {
             </ul>
           </nav>
  
-        <Box>
-          <Switch>
-            <Route path="/" exact>
-              <Home/>
-            </Route>
-            <Route path="/assignments">
-              <Assignments/>
-            </Route>
-            <Route path="/assignment">
-              <Assignment/>
-            </Route>
-          </Switch>
-        </Box>
-        </Router>
+          <Box>
+            <Switch>
+              <Route path="/" exact>
+                <Home/>
+              </Route>
+              <Route path="/assignments">
+                <Assignments/>
+              </Route>
+              <Route path="/assignment">
+                <Assignment/>
+              </Route>
+            </Switch>
+          </Box>
+                 </Router>
     </Grommet>
   )
 }
