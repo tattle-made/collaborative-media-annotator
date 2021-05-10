@@ -9,7 +9,7 @@ function App() {
   return (
     <Grommet full>
       <Router>
-        <Box fill>
+        <Box fill background={"brand"}>
           <nav>
             <ul style={{ listStyleType: "none" }}>
               <Box direction={"row"} gap={"small"}>
