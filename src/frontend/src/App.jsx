@@ -9,21 +9,23 @@ function App() {
   return (
     <Grommet full>
       <Router>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">home</Link>
-            </li>
-            <li>
-              <Link to="/assignments">assignments</Link>
-            </li>
-            <li>
-              <Link to="/assignment">assignment</Link>
-            </li>
-          </ul>
-        </nav>
+        <Box fill>
+          <nav>
+            <ul style={{ listStyleType: "none" }}>
+              <Box direction={"row"} gap={"small"}>
+                <li>
+                  <Link to="/">home</Link>
+                </li>
+                <li>
+                  <Link to="/assignments">assignments</Link>
+                </li>
+                <li>
+                  <Link to="/assignment">assignment</Link>
+                </li>
+              </Box>
+            </ul>
+          </nav>
 
-        <Box>
           <Switch>
             <Route path="/" exact>
               <Home />
