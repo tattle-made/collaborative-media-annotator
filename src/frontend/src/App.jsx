@@ -3,42 +3,50 @@ import { Grommet, Box } from "grommet";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Assignments from "./pages/Assignments";
 import Assignment from "./pages/Assignment";
+import AssignmentNew from "./pages/AssignmentNew";
 import Home from "./pages/Home";
 
 function App() {
   return (
     <Grommet full>
-      <Router>
-        <Box fill>
-          <nav>
-            <ul style={{ listStyleType: "none" }}>
-              <Box direction={"row"} gap={"small"}>
-                <li>
-                  <Link to="/">home</Link>
-                </li>
-                <li>
-                  <Link to="/assignments">assignments</Link>
-                </li>
-                <li>
-                  <Link to="/assignment">assignment</Link>
-                </li>
-              </Box>
-            </ul>
-          </nav>
+      <Box flex={"grow"} background={"light-3"}>
+        <Router>
+          <Box>
+            <nav>
+              <ul style={{ listStyleType: "none" }}>
+                <Box direction={"row"} gap={"small"}>
+                  <li>
+                    <Link to="/">home</Link>
+                  </li>
+                  <li>
+                    <Link to="/exercises">exercises</Link>
+                  </li>
+                  <li>
+                    <Link to="/exercise">exercise</Link>
+                  </li>
+                </Box>
+              </ul>
+            </nav>
+          </Box>
 
-          <Switch>
-            <Route path="/" exact>
-              <Home />
-            </Route>
-            <Route path="/assignments">
-              <Assignments />
-            </Route>
-            <Route path="/assignment">
-              <Assignment />
-            </Route>
-          </Switch>
-        </Box>
-      </Router>
+          <Box flex={"grow"} pad={"medium"}>
+            <Switch>
+              <Route path="/" exact>
+                <Home />
+              </Route>
+              <Route path="/exercises" exact>
+                <Assignments />
+              </Route>
+              <Route path="/exercises/new" exact>
+                <AssignmentNew />
+              </Route>
+              <Route path="/exercise">
+                <Assignment />
+              </Route>
+            </Switch>
+          </Box>
+        </Router>
+      </Box>
     </Grommet>
   );
 }

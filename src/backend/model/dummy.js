@@ -8,7 +8,7 @@ function InstanceFactory({} = {}) {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for number form fields. ${err.message}`;
+		throw `Error : Could not create Dummy object. Please check schema. ${err.message}`;
 	}
 }
 

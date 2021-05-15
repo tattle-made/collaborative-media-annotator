@@ -25,7 +25,7 @@ async function InstanceFactory({ id = nanoid(), label, parameters = {} } = {}) {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for string form fields. ${err.message}`;
+		throw `Error : Could not create text model. Please check schema. ${err.message}`;
 	}
 }
 

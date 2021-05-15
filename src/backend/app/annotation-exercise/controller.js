@@ -9,11 +9,10 @@ async function create({ name, description, password } = {}) {
 			description,
 			password,
 		});
-		const id = nanoid();
-		await redis.hset(`exercise:${id}`, exercise);
-		return { id };
+		await redis.hset(`${exercise.id}`, exercise);
+		return { exercise };
 	} catch (err) {
-		throw `Error Creating Exercise. ${err.message}`;
+		throw `Error Creating Exercise. ${err}`;
 	}
 }
 

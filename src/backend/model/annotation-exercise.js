@@ -5,8 +5,10 @@ const {
 	names,
 	colors,
 } = require("unique-names-generator");
+const { nanoid } = require("nanoid");
 
 const Schema = Joi.object({
+	id: Joi.string().min(1).max(50),
 	name: Joi.string().required(),
 	description: Joi.string().min(0).max(140),
 	password: Joi.string().required(),
@@ -25,6 +27,7 @@ const Schema = Joi.object({
  * instance = InstanceFactory({name = "blue rohan", participants = 12}) // throws error "participants" must be an array
  */
 async function InstanceFactory({
+	id = `exercise:${nanoid()}`,
 	name = uniqueNamesGenerator({
 		dictionaries: [colors, names],
 		separator: " ",
@@ -39,6 +42,7 @@ async function InstanceFactory({
 	posts = [],
 } = {}) {
 	const obj = {
+		id,
 		name,
 		description,
 		password,
@@ -53,7 +57,7 @@ async function InstanceFactory({
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for number form fields. ${err.message}`;
+		throw `Error : Could not create Exercise object. Please check Schema. ${err.message}`;
 	}
 }
 

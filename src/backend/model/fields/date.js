@@ -19,7 +19,7 @@ async function InstanceFactory({ id = nanoid(), label, type } = {}) {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for date form fields. ${err.message}`;
+		throw `Error : Could not create Date object. Please check schema. ${err.message}`;
 	}
 }
 

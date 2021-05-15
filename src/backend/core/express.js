@@ -1,6 +1,5 @@
 const express = require("express");
-// const bodyParser = require("body-parser");
-
+const bodyParser = require("body-parser");
 const cors = require("cors");
 
 const expressApp = express();
@@ -21,8 +20,10 @@ const configure = (expressApp) => {
 		next();
 	});
 	// expressApp.use(bodyParser.urlencoded());
-	// expressApp.use(bodyParser.json());
+	// expressApp.use(express.json);
 	// expressApp.use(authenticationMiddleware);
+
+	expressApp.use(bodyParser.json());
 	return expressApp;
 };
 

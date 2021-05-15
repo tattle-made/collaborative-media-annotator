@@ -1,6 +1,8 @@
 const Joi = require("joi");
+const { nanoid } = require("nanoid");
 
 const Schema = Joi.object({
+	id: Joi.string().min(1).max(50),
 	type: Joi.any().allow("text", "audio", "image", "video").required(),
 	url: Joi.string().uri().required(),
 });
@@ -12,8 +14,9 @@ const Schema = Joi.object({
  *	 url: "https://www.google.com/search",
  * });
  */
-async function InstanceFactory({ type, url } = {}) {
-	const post = {
+async function InstanceFactory({ id = `post:${nanoid()}`, type, url } = {}) {
+	const obj = {
+		id,
 		type,
 		url,
 	};
@@ -22,7 +25,7 @@ async function InstanceFactory({ type, url } = {}) {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for number form fields. ${err.message}`;
+		throw `Error : Could not create Post object. Please check schema. ${err.message}`;
 	}
 }
 

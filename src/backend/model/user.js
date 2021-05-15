@@ -5,6 +5,8 @@ const {
 	colors,
 } = require("unique-names-generator");
 const randomColor = require("randomcolor");
+const { redis } = require("../core/redis");
+const { nanoid } = require("nanoid");
 
 const Schema = Joi.object({
 	name: Joi.string().min(3).max(25),
@@ -35,4 +37,15 @@ async function InstanceFactory({
 	}
 }
 
-module.exports = { InstanceFactory };
+async function save(user) {
+	console.log("saving user in redis", user);
+	const id = nanoid();
+	try {
+		const result = await redis.hset(`user:${id}`, user);
+		connsole.log({ id, result });
+	} catch (err) {
+		throw `Could not save user in Redis ${user}`;
+	}
+}
+
+module.exports = { InstanceFactory, save };
