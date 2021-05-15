@@ -1,6 +1,8 @@
 const Joi = require("joi");
+const { nanoid } = require("nanoid");
 
 const Schema = Joi.object({
+	id: Joi.string().max(10).required(),
 	label: Joi.string().min(5).max(25).required(),
 	type: Joi.string().valid("multiselect").required(),
 	parameters: Joi.object({
@@ -18,8 +20,9 @@ const Schema = Joi.object({
  *	},
  *	});
  */
-async function InstanceFactory({ label, parameters } = {}) {
-	const obj = { label, type: "multiselect", parameters };
+
+async function InstanceFactory({ id = nanoid(), label, parameters } = {}) {
+	const obj = { id, label, type: "multiselect", parameters };
 	try {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;

@@ -4,14 +4,19 @@ const {
 	names,
 	colors,
 } = require("unique-names-generator");
+const randomColor = require("randomcolor");
 
 const Schema = Joi.object({
 	name: Joi.string().min(3).max(25),
+	avatar_color: Joi.string().regex(/^#[A-Fa-f0-9]{6}$/),
 });
 
 /**
  *
- * Leaving the parameter name as empty generates a random username
+ * name and avatar_color are optional parameters.
+ * USAGE :
+ * 	user.InstanceFactory();
+ * 	user.InstanceFactory({avatar_color: "#6483f4"});
  */
 async function InstanceFactory({
 	name = uniqueNamesGenerator({
@@ -19,13 +24,15 @@ async function InstanceFactory({
 		separator: " ",
 		style: "lowerCase",
 	}),
-	parameters = {},
+	avatar_color = randomColor({ hue: "blue" }),
 } = {}) {
-	const obj = { name, parameters };
+	const obj = { name, avatar_color };
 	try {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
 	} catch (err) {
-		throw `Error : Could not create object. Please check the schema for string form fields. ${err.message}`;
+		throw `Error : Could not create User. Please check the schema in docs. ${err.message}`;
 	}
 }
+
+module.exports = { InstanceFactory };

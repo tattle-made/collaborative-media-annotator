@@ -1,7 +1,9 @@
 const Joi = require("joi");
+const { nanoid } = require("nanoid");
 
 // todo ensure max is greater than min
 const Schema = Joi.object({
+	id: Joi.string().max(10).required(),
 	label: Joi.string().min(5).max(25).required(),
 	type: Joi.string().valid("number").required(),
 	parameters: Joi.object({
@@ -10,8 +12,8 @@ const Schema = Joi.object({
 	}),
 }).options({ stripUnknown: true });
 
-async function InstanceFactory({ label, parameters = {} } = {}) {
-	const obj = { label, type: "number", parameters };
+async function InstanceFactory({ id = nanoid(), label, parameters = {} } = {}) {
+	const obj = { id, label, type: "number", parameters };
 	try {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
