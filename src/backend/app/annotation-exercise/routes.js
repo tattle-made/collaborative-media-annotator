@@ -78,7 +78,7 @@ const configure = (expressApp) => {
 	});
 
 	expressApp.get("/exercise/:exercise_id", async (req, res) => {
-		console.log("HERE");
+		// console.log("HERE");
 		try {
 			const { exercise_id } = req.params;
 			const exercise = await RedisUtils.getJSON(
@@ -92,16 +92,16 @@ const configure = (expressApp) => {
 
 			const posts = JSON.parse(exercise.toString()).posts;
 
-			console.log({ POSTS: posts });
+			// console.log({ POSTS: posts });
 			let postRes = [];
 			posts.map(async (post) => {
 				postRes.push(redis.hgetall(`post:${exercise_id}:${post}`));
 			});
 
 			const allPosts = await Promise.all(postRes);
-			console.log({ PPPPP: allPosts });
+			// console.log({ PPPPP: allPosts });
 
-			console.log({ exercise_id, exercise });
+			// console.log({ exercise_id, exercise });
 			res.status(StatusCodes.OK).send({
 				exercise: JSON.parse(exercise.toString()),
 				schema: JSON.parse(schema.toString()),

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Text,
@@ -14,13 +14,19 @@ function RectZone() {
   return <>{regions.map((region) => {})}</>;
 }
 
-function LabelWrapper({ children, label, type }) {
+function LabelWrapper({ children, label, socket, type, fieldId }) {
   const [value, setValue] = useState(FormComponentIndex[type].defaultValue);
+
+  function sendEvent(fieldValue) {
+    console.log("Sending : ", { id: fieldId, value: fieldValue });
+    socket.emit("data", { id: fieldId, value: fieldValue });
+  }
 
   function set(e) {
     console.log("here");
     console.log(e);
-    FormComponentIndex[type].onChange(setValue, e);
+    // send formId too
+    FormComponentIndex[type].onChange(setValue, e, sendEvent);
   }
 
   const WrappedChildren = React.cloneElement(children, {
@@ -35,7 +41,7 @@ function LabelWrapper({ children, label, type }) {
   );
 }
 
-const FormBuilder = ({ formData }) => {
+const FormBuilder = ({ formData, socket }) => {
   const [value, setValue] = React.useState({});
   return (
     <Box gap={"medium"}>
@@ -47,12 +53,19 @@ const FormBuilder = ({ formData }) => {
         }}
       >
         {Object.keys(formData).map((formItem, index) => {
+          const id = formData[formItem].id;
           const type = formData[formItem].type;
           const label = formData[formItem].label;
           const parameters = formData[formItem].parameters;
+
           return (
             <Box gap={"small"} key={index}>
-              <LabelWrapper type={type} label={label}>
+              <LabelWrapper
+                type={type}
+                label={label}
+                fieldId={id}
+                socket={socket}
+              >
                 {FormComponentIndex[type].component(parameters)}
               </LabelWrapper>
             </Box>
@@ -71,8 +84,9 @@ const FormComponentIndex = {
       return <TextInput type="number" />;
     },
     defaultValue: 0,
-    onChange: (setValue, event) => {
+    onChange: (setValue, event, sendEvent) => {
       setValue(event.target.value);
+      sendEvent(event.target.value);
     },
   },
   string: {
@@ -80,8 +94,9 @@ const FormComponentIndex = {
       return <TextInput type="text" />;
     },
     defaultValue: "hello",
-    onChange: (setValue, event) => {
+    onChange: (setValue, event, sendEvent) => {
       setValue(event.target.value);
+      sendEvent(event.target.value);
     },
   },
   date: {
@@ -89,8 +104,9 @@ const FormComponentIndex = {
       return <TextInput type="date" />;
     },
     defaultValue: "02/02/2021",
-    onChange: (setValue, event) => {
+    onChange: (setValue, event, sendEvent) => {
       setValue(event.target.value);
+      sendEvent(event.target.value);
     },
   },
   multiselect: {
@@ -98,8 +114,9 @@ const FormComponentIndex = {
       return <CheckBoxGroup options={parameters.options} />;
     },
     defaultValue: [],
-    onChange: (setValue, event) => {
+    onChange: (setValue, event, sendEvent) => {
       setValue(event.value);
+      sendEvent(event.value.join(","));
     },
   },
   singleselect: {
@@ -109,8 +126,9 @@ const FormComponentIndex = {
       );
     },
     defaultValue: "a",
-    onChange: (setValue, event) => {
-      setValue(event.value);
+    onChange: (setValue, event, sendEvent) => {
+      setValue(event.target.value);
+      sendEvent(event.target.value);
     },
   },
   rectzone: {

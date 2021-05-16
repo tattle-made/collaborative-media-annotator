@@ -21,52 +21,20 @@ const participants = [
 const url =
   "https://images.unsplash.com/photo-1620416417410-5e467e5dbd25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib";
 
-const AnnotationForm = () => {
-  const formData = {
-    number: {
-      label: "Please enter a number",
-      type: "number",
-      parameters: {
-        max: 1,
-        min: 20,
-      },
-    },
-    text: {
-      label: "Please enter a string",
-      type: "string",
-      parameters: {
-        length: 300,
-        lines: 5,
-      },
-    },
-    date: {
-      label: "Date of birth",
-      type: "date",
-    },
-    checkmarks: {
-      label: "Choose one or more",
-      type: "multiselect",
-      parameters: {
-        options: ["Option A", "Option B", "Option C"],
-      },
-    },
-    radiogroup: {
-      label: "Choose one of the following",
-      type: "singleselect",
-      parameters: {
-        name: "options",
-        options: ["a", "b", "c"],
-      },
-    },
-    // human_zones: {
-    //   label: "Mark any humans in the image",
-    //   type: "rectzone",
-    // },
-  };
+const AnnotationForm = ({ schema }) => {
+  const [socket, setSocket] = useState(undefined);
+  useEffect(() => {
+    console.log("çonnect to socket");
+    const skt = socketIOClient(api_url);
+    setSocket(skt);
 
+    skt.on("data", (msg) => {
+      console.log("data received", msg);
+    });
+  }, []);
   return (
     <>
-      <FormBuilder formData={formData} />
+      <FormBuilder formData={schema} socket={socket} />
     </>
   );
 };
@@ -89,22 +57,14 @@ const Assignment = () => {
 
   const [posts, setPosts] = useState([]);
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
-
-  useEffect(() => {
-    const socket = socketIOClient(api_url);
-    return () => {
-      // cleanup
-    };
-  }, [currentPostIndex]);
+  const [schema, setSchema] = useState([]);
 
   useEffect(async () => {
-    // effect
-    console.log("LOADING ASSIGNMENT");
-    console.log(exerciseId);
     const exerciseRes = (await axios.get(`${api_url}/exercise/${exerciseId}`))
       .data;
-    console.log(exerciseRes);
+    // console.log(exerciseRes);
     setPosts(exerciseRes.posts);
+    setSchema(exerciseRes.schema);
   }, []);
 
   useEffect(() => {
@@ -112,17 +72,13 @@ const Assignment = () => {
       let height = boxRef.current.offsetHeight;
       let width = boxRef.current.offsetWidth;
 
-      console.log({ height, width });
       setStageDimensions({ width, height });
     }
-    return () => {
-      //cleanup
-    };
   }, [boxRef]);
 
   useEffect(() => {
-    console.log("image loaded");
-    console.log({ image, stageDimensions });
+    // console.log("image loaded");
+    // console.log({ image, stageDimensions });
     if (image && stageDimensions) {
       let scaledImage = calculateImagePos(
         stageDimensions.width,
@@ -130,7 +86,7 @@ const Assignment = () => {
         image.width,
         image.height
       );
-      console.log({ scaledImage });
+      // console.log({ scaledImage });
       setScaledImage(scaledImage);
     }
 
@@ -310,7 +266,7 @@ const Assignment = () => {
         </Box>
         <Box fill pad={{ right: "xsmall", left: "xsmall" }}>
           {/* <Button onClick={btnClicked} label={"test"} /> */}
-          <AnnotationForm />
+          <AnnotationForm schema={schema} />
         </Box>
       </Box>
     </Box>

@@ -7,10 +7,15 @@ function configure(io) {
 
 		socket.on("data", (msg) => {
 			console.log("message : ", msg);
+			socket.broadcast.emit("data", msg);
 		});
 
 		socket.on("exit", (msg) => {
 			console.log("user exit");
+		});
+
+		socket.on("join", (msg) => {
+			console.log("user joined ", msg);
 		});
 	});
 }

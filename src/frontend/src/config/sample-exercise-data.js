@@ -6,6 +6,7 @@ export const samplePostUrls = [
 
 export const sampleSchema = [
   {
+    id: "first",
     label: "Please enter a number",
     type: "number",
     parameters: {
@@ -14,6 +15,7 @@ export const sampleSchema = [
     },
   },
   {
+    id: "second",
     label: "Please enter a string",
     type: "string",
     parameters: {
@@ -22,10 +24,12 @@ export const sampleSchema = [
     },
   },
   {
+    id: "third",
     label: "Date of birth",
     type: "date",
   },
   {
+    id: "fourth",
     label: "Choose one or more",
     type: "multiselect",
     parameters: {
@@ -33,6 +37,7 @@ export const sampleSchema = [
     },
   },
   {
+    id: "fifth",
     label: "Choose one of the following",
     type: "singleselect",
     parameters: {

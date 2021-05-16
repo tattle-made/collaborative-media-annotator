@@ -34,6 +34,7 @@ const AssignmentNew = () => {
 
   async function onClickCreate() {
     try {
+      // console.log(exerciseSchema);
       const res = await axios.post(`${api_url}/exercise`, {
         name: exerciseName,
         description: exerciseDescription,
