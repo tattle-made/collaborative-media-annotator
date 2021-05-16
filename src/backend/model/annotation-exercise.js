@@ -27,7 +27,7 @@ const Schema = Joi.object({
  * instance = InstanceFactory({name = "blue rohan", participants = 12}) // throws error "participants" must be an array
  */
 async function InstanceFactory({
-	id = `exercise:${nanoid()}`,
+	id = `${nanoid()}`,
 	name = uniqueNamesGenerator({
 		dictionaries: [colors, names],
 		separator: " ",

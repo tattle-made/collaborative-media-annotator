@@ -2,22 +2,6 @@ const { StatusCodes } = require("http-status-codes");
 const user = require("../../model/user");
 const { redis } = require("../../core/redis");
 
-const createUsers = async () => {
-	users = [];
-	for (i = 0; i < 10; i++) {
-		let userInstance = await user.InstanceFactory();
-		try {
-			await user.save(userInstance);
-		} catch (err) {
-			console.log(err);
-		}
-		users.push(userInstance);
-	}
-	console.log(users);
-};
-
-// createUsers();
-
 const configure = (expressApp) => {
 	expressApp.get("/users", async (req, res) => {
 		const userIds = await redis.keys("user:*");

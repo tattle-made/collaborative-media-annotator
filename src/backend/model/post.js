@@ -14,7 +14,7 @@ const Schema = Joi.object({
  *	 url: "https://www.google.com/search",
  * });
  */
-async function InstanceFactory({ id = `post:${nanoid()}`, type, url } = {}) {
+async function InstanceFactory({ id = `${nanoid()}`, type, url } = {}) {
 	const obj = {
 		id,
 		type,

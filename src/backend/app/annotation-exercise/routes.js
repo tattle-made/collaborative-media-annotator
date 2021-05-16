@@ -1,6 +1,11 @@
 const { StatusCodes } = require("http-status-codes");
-const { create: createExercise } = require("./controller");
-const { createMany: createManyPosts } = require("../post/controller");
+const {
+	create: createExercise,
+	getAll: getAllExercises,
+} = require("./controller");
+const {
+	createManyForExercise: createManyPostsForExercise,
+} = require("../post/controller");
 
 const configure = (expressApp) => {
 	expressApp.post("/exercise", async (req, res) => {
@@ -17,7 +22,10 @@ const configure = (expressApp) => {
 			});
 			console.log({ EXERCISE: exerciseInstance });
 
-			const posts = await createManyPosts(post_urls);
+			const posts = await createManyPostsForExercise(
+				post_urls,
+				exerciseInstance.id
+			);
 			console.log({ POSTS: posts });
 			// create posts in exercise and get ids
 			// create participant set for this exercise
@@ -25,6 +33,16 @@ const configure = (expressApp) => {
 			res.status(StatusCodes.OK).send("exercise");
 		} catch (err) {
 			console.log(`Error : Could not handle POST /exercise. ${err}`);
+		}
+	});
+
+	expressApp.get("/exercises", async (req, res) => {
+		try {
+			const exercises = await getAllExercises();
+			res.status(StatusCodes.OK).send({ exercises });
+		} catch (err) {
+			console.log(`Error : could not process GET /exercises. ${err}`);
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR);
 		}
 	});
 

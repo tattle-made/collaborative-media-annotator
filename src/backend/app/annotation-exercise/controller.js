@@ -9,13 +9,31 @@ async function create({ name, description, password } = {}) {
 			description,
 			password,
 		});
-		await redis.hset(`${exercise.id}`, exercise);
-		return { exercise };
+		await redis.hset(`exercise:${exercise.id}`, exercise);
+		return exercise;
 	} catch (err) {
 		throw `Error Creating Exercise. ${err}`;
 	}
 }
 
+async function getAll() {
+	try {
+		let response;
+		const exercises = await redis.keys("exercise:*");
+
+		const hgetallPromises = [];
+		exercises.map(async (exercise) => {
+			hgetallPromises.push(redis.hgetall(exercise));
+		});
+
+		response = await Promise.all(hgetallPromises);
+		return response;
+	} catch (err) {
+		console.log(err);
+		throw "Error : Could not fetch exercises from store";
+	}
+}
+
 // async function
 
-module.exports = { create };
+module.exports = { create, getAll };
