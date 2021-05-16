@@ -1,3 +1,5 @@
+const { redis } = require("./redis");
+
 function configure(io) {
 	io.on("connection", (socket) => {
 		console.log("a user connected");
@@ -14,8 +16,22 @@ function configure(io) {
 			console.log("user exit");
 		});
 
-		socket.on("join", (msg) => {
+		socket.on("join", async (msg) => {
 			console.log("user joined ", msg);
+			try {
+				await redis.sadd(
+					`participant-ol:${msg.exerciseId}:${msg.postId}`,
+					msg.name
+				);
+			} catch (err) {
+				console.log(`Error : could not add participant. ${err}`);
+			}
+
+			const onlineParticipants = await redis.smembers(
+				`participant-ol:${msg.exerciseId}:${msg.postId}`
+			);
+			console.log({ onlineParticipants });
+			socket.broadcast.emit("join", onlineParticipants);
 		});
 	});
 }

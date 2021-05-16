@@ -7,28 +7,12 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { api_url } from "../config/default.json";
 import socketIOClient from "socket.io-client";
-
-const participants = [
-  { name: "red boy", avatar_color: "#85c4f7" },
-  { name: "green girraffe", avatar_color: "#8fd9a7" },
-  { name: "aqua mike", avatar_color: "#25c4a9" },
-  { name: "cyan ten", avatar_color: "#15b4c8" },
-  { name: "magenta hotel", avatar_color: "#85a4d2" },
-  { name: "pink xylophone", avatar_color: "#85e4f1" },
-  { name: "purple perish", avatar_color: "#85d4c2" },
-];
+import { useStore } from "../store/global";
 
 const url =
   "https://images.unsplash.com/photo-1620416417410-5e467e5dbd25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib";
 
-const AnnotationForm = ({ schema }) => {
-  const [socket, setSocket] = useState(undefined);
-  useEffect(() => {
-    console.log("çonnect to socket");
-    const skt = socketIOClient(api_url);
-    skt.emit("join", {});
-    setSocket(skt);
-  }, []);
+const AnnotationForm = ({ schema, socket }) => {
   return (
     <>
       <FormBuilder formData={schema} socket={socket} />
@@ -55,6 +39,39 @@ const Assignment = () => {
   const [posts, setPosts] = useState([]);
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [schema, setSchema] = useState([]);
+
+  const [socket, setSocket] = useState(undefined);
+  const [participants, setParticipants] = useState([]);
+  const currentUser = useStore((state) => state.currentUser);
+
+  useEffect(() => {
+    console.log("CONNECT to socket");
+    const skt = socketIOClient(api_url);
+    skt.on("join", (msg) => {
+      console.log("rcvd", msg);
+      setParticipants(msg);
+    });
+    setSocket(skt);
+  }, []);
+
+  useEffect(() => {
+    console.log({ currentUser, posts, currentPostIndex });
+    // console.log({
+    //   HI: "hi",
+    //   name: currentUser.name,
+    //   exerciseId,
+    //   postId: posts,
+    //   ix: currentPostIndex,
+    // });
+    if (currentUser && posts.length != 0) {
+      console.log("JOIN SEND");
+      socket.emit("join", {
+        name: currentUser.name,
+        exerciseId,
+        postId: posts[currentPostIndex].id,
+      });
+    }
+  }, [posts]);
 
   useEffect(async () => {
     const exerciseRes = (await axios.get(`${api_url}/exercise/${exerciseId}`))
@@ -159,16 +176,17 @@ const Assignment = () => {
         direction={"row-responsive"}
         gap={"xxsmall"}
       >
-        {participants.map((participant, ix) => (
-          <Avatar key={ix} background={participant.avatar_color} size={"small"}>
-            <Text size={"xsmall"}>
-              {participant.name
-                .split(" ")
-                .map((word) => word[0])
-                .join("")}
-            </Text>
-          </Avatar>
-        ))}
+        {participants &&
+          participants.map((participant, ix) => (
+            <Avatar key={ix} background={"light-3"} size={"small"}>
+              <Text size={"xsmall"}>
+                {participant
+                  .split(" ")
+                  .map((word) => word[0])
+                  .join("")}
+              </Text>
+            </Avatar>
+          ))}
       </Box>
       <Box direction={"row-responsive"} fill>
         <Box ref={boxRef} fill background={"light-4"} overflow={"hidden"}>
@@ -263,7 +281,7 @@ const Assignment = () => {
         </Box>
         <Box fill pad={{ right: "xsmall", left: "xsmall" }}>
           {/* <Button onClick={btnClicked} label={"test"} /> */}
-          <AnnotationForm schema={schema} />
+          <AnnotationForm schema={schema} socket={socket} />
         </Box>
       </Box>
     </Box>
