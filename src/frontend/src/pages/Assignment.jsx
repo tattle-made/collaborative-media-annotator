@@ -26,6 +26,7 @@ const AnnotationForm = ({ schema }) => {
   useEffect(() => {
     console.log("çonnect to socket");
     const skt = socketIOClient(api_url);
+    skt.emit("join", {});
     setSocket(skt);
   }, []);
   return (

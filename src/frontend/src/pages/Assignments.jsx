@@ -6,6 +6,7 @@ import axios from "axios";
 import { api_url } from "../config/default.json";
 import { View } from "grommet-icons";
 import { Link } from "../components/Link";
+import { useStore } from "../store/global";
 
 const Assignments = () => {
   const [exercises, setExercises] = useState([]);
