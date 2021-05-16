@@ -15,7 +15,7 @@ const Schema = Joi.object({
 	schema: Joi.number(),
 	owner: Joi.number(),
 	editors: Joi.array().items(Joi.number()),
-	participants: Joi.array().items(Joi.number()),
+	participants: Joi.array().items(Joi.string()),
 	posts: Joi.array().items(Joi.number()),
 });
 

@@ -3,6 +3,8 @@ const {
 	create: createExercise,
 	getAll: getAllExercises,
 	get: getExercise,
+	addParticipants,
+	getParticipants,
 } = require("./controller");
 const {
 	createManyForExercise: createManyPostsForExercise,
@@ -11,15 +13,15 @@ const {
 const configure = (expressApp) => {
 	expressApp.post("/exercise", async (req, res) => {
 		try {
-			// console.log(req.body);
-
 			const { name, description, post_urls, participants, schema } =
 				req.body;
+			console.log(participants);
+			const response = {};
 
-			// create an exercise in redis (name, description)
 			const exerciseInstance = await createExercise({
 				name,
 				description,
+				participants,
 			});
 			console.log({ EXERCISE: exerciseInstance });
 
@@ -27,11 +29,15 @@ const configure = (expressApp) => {
 				post_urls,
 				exerciseInstance.id
 			);
-			console.log({ POSTS: posts });
-			// create posts in exercise and get ids
-			// create participant set for this exercise
+			exerciseInstance.posts = posts;
+
+			console.log(participants);
+			await addParticipants(participants, "test_id");
+
+			console.log({ EXERCISEEEEE: exerciseInstance });
+
 			// save schema in redis
-			res.status(StatusCodes.OK).send("exercise");
+			res.status(StatusCodes.OK).send(response);
 		} catch (err) {
 			console.log(`Error : Could not handle POST /exercise. ${err}`);
 		}
@@ -56,6 +62,17 @@ const configure = (expressApp) => {
 			res.status(StatusCodes.OK).send({ exercise });
 		} catch (err) {
 			console.log(`Error : could not process GET /exercise. ${err}`);
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
+		}
+	});
+
+	expressApp.get("/exercise/:exercise_id/participants", async (req, res) => {
+		try {
+			const { exercise_id } = req.params;
+			const participants = await getParticipants(exercise_id);
+			res.status(StatusCodes.OK).send({ participants });
+		} catch (err) {
+			console.log(`Error : could not fetch participants. ${err}`);
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
 		}
 	});

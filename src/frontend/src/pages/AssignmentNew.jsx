@@ -17,7 +17,7 @@ const AssignmentNew = () => {
   const [exerciseDescription, setExerciseDescription] = React.useState("");
   const [exerciseSchema, setExerciseSchema] = React.useState(sampleSchema);
   const [postUrls, setPostUrls] = React.useState(samplePostUrls);
-  const [partcipants, setParticipants] = React.useState([]);
+  const [participants, setParticipants] = React.useState([]);
 
   useEffect(async () => {
     console.log(`${api_url}/users`);
@@ -37,7 +37,7 @@ const AssignmentNew = () => {
         description: exerciseDescription,
         schema: exerciseSchema,
         post_urls: postUrls,
-        partcipants,
+        participants,
       });
       console.log({ res });
 

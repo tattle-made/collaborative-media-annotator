@@ -2,12 +2,13 @@ const { redis } = require("../../core/redis");
 const annotationExercise = require("../../model/annotation-exercise");
 const { nanoid } = require("nanoid");
 
-async function create({ name, description, password } = {}) {
+async function create({ name, description, password, participants } = {}) {
 	try {
 		const exercise = await annotationExercise.InstanceFactory({
 			name,
 			description,
 			password,
+			participants,
 		});
 		await redis.hset(`exercise:${exercise.id}`, exercise);
 		return exercise;
@@ -43,6 +44,25 @@ async function get(id) {
 	}
 }
 
+async function addParticipants(participants, annotationId) {
+	try {
+		participants.map(async (participant) => {
+			await redis.sadd(`participant:${annotationId}`, participant);
+		});
+	} catch (err) {
+		throw `Error : Could not add participants`;
+	}
+}
+
+async function getParticipants(exerciseId) {
+	try {
+		const participants = await redis.smembers(`participant:${exerciseId}`);
+		return participants;
+	} catch (err) {
+		throw `Error : Could not add participants`;
+	}
+}
+
 // async function
 
-module.exports = { create, getAll, get };
+module.exports = { create, getAll, get, addParticipants, getParticipants };

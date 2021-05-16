@@ -7,7 +7,7 @@ async function createManyForExercise(urls, exerciseId) {
 
 	urls.map(async (url) => {
 		let instance = await postModel.InstanceFactory({ type: "image", url });
-		posts.push(instance);
+		posts.push(instance.id);
 
 		try {
 			// const result = await pipeline.exec();
