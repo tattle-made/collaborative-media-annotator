@@ -6,6 +6,7 @@ import FormBuilder from "../components/FormBuilder";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { api_url } from "../config/default.json";
+import socketIOClient from "socket.io-client";
 
 const participants = [
   { name: "red boy", avatar_color: "#85c4f7" },
@@ -86,6 +87,16 @@ const Assignment = () => {
   });
   const [rectangles, setRectangles] = useState([]);
 
+  const [posts, setPosts] = useState([]);
+  const [currentPostIndex, setCurrentPostIndex] = useState(0);
+
+  useEffect(() => {
+    const socket = socketIOClient(api_url);
+    return () => {
+      // cleanup
+    };
+  }, [currentPostIndex]);
+
   useEffect(async () => {
     // effect
     console.log("LOADING ASSIGNMENT");
@@ -93,6 +104,7 @@ const Assignment = () => {
     const exerciseRes = (await axios.get(`${api_url}/exercise/${exerciseId}`))
       .data;
     console.log(exerciseRes);
+    setPosts(exerciseRes.posts);
   }, []);
 
   useEffect(() => {
