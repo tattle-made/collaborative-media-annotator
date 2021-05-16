@@ -2,6 +2,7 @@ const { StatusCodes } = require("http-status-codes");
 const {
 	create: createExercise,
 	getAll: getAllExercises,
+	get: getExercise,
 } = require("./controller");
 const {
 	createManyForExercise: createManyPostsForExercise,
@@ -43,6 +44,19 @@ const configure = (expressApp) => {
 		} catch (err) {
 			console.log(`Error : could not process GET /exercises. ${err}`);
 			res.status(StatusCodes.INTERNAL_SERVER_ERROR);
+		}
+	});
+
+	expressApp.get("/exercise/:exercise_id", async (req, res) => {
+		try {
+			const { exercise_id } = req.params;
+			const exercise = await getExercise(exercise_id);
+
+			console.log({ exercise_id, exercise });
+			res.status(StatusCodes.OK).send({ exercise });
+		} catch (err) {
+			console.log(`Error : could not process GET /exercise. ${err}`);
+			res.status(StatusCodes.INTERNAL_SERVER_ERROR).send();
 		}
 	});
 

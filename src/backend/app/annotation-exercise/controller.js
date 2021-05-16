@@ -34,6 +34,15 @@ async function getAll() {
 	}
 }
 
+async function get(id) {
+	try {
+		const exercise = await redis.hgetall(`exercise:${id}`);
+		return exercise;
+	} catch (err) {
+		throw `Could not fetch exercise ${{ id }}. ${err}`;
+	}
+}
+
 // async function
 
-module.exports = { create, getAll };
+module.exports = { create, getAll, get };
