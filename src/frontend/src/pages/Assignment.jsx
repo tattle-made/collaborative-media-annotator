@@ -8,6 +8,7 @@ import axios from "axios";
 import { api_url } from "../config/default.json";
 import socketIOClient from "socket.io-client";
 import { useStore } from "../store/global";
+import randomColor from "randomcolor";
 
 const url =
   "https://images.unsplash.com/photo-1620416417410-5e467e5dbd25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib";
@@ -170,23 +171,30 @@ const Assignment = () => {
 
   return (
     <Box fill>
-      <Heading>Assignment</Heading>
-      <Box
-        className="participants"
-        direction={"row-responsive"}
-        gap={"xxsmall"}
-      >
-        {participants &&
-          participants.map((participant, ix) => (
-            <Avatar key={ix} background={"light-3"} size={"small"}>
-              <Text size={"xsmall"}>
-                {participant
-                  .split(" ")
-                  .map((word) => word[0])
-                  .join("")}
-              </Text>
-            </Avatar>
-          ))}
+      <Box direction={"row"} align={"center"} gap={"medium"}>
+        <Heading>Assignment</Heading>
+        <Box flex={"grow"}></Box>
+        <Box
+          className="participants"
+          direction={"row-responsive"}
+          gap={"xxsmall"}
+        >
+          {participants &&
+            participants.map((participant, ix) => (
+              <Avatar
+                key={ix}
+                background={randomColor({ hue: "blue" })}
+                size={"small"}
+              >
+                <Text size={"xsmall"}>
+                  {participant
+                    .split(" ")
+                    .map((word) => word[0])
+                    .join("")}
+                </Text>
+              </Avatar>
+            ))}
+        </Box>
       </Box>
       <Box direction={"row-responsive"} fill>
         <Box ref={boxRef} fill background={"light-4"} overflow={"hidden"}>
