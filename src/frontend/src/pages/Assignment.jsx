@@ -27,10 +27,6 @@ const AnnotationForm = ({ schema }) => {
     console.log("çonnect to socket");
     const skt = socketIOClient(api_url);
     setSocket(skt);
-
-    skt.on("data", (msg) => {
-      console.log("data received", msg);
-    });
   }, []);
   return (
     <>

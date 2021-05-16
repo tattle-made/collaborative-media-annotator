@@ -22,6 +22,19 @@ function LabelWrapper({ children, label, socket, type, fieldId }) {
     socket.emit("data", { id: fieldId, value: fieldValue });
   }
 
+  useEffect(() => {
+    socket.on("data", (msg) => {
+      if (fieldId === msg.id) {
+        console.log(`rcvd ${fieldId} : ${msg.value}`);
+        if (type === "multiselect") {
+          setValue(msg.value.split(","));
+        } else {
+          setValue(msg.value);
+        }
+      }
+    });
+  }, [socket]);
+
   function set(e) {
     console.log("here");
     console.log(e);
