@@ -9,9 +9,9 @@ import Home from "./pages/Home";
 function App() {
   return (
     <Grommet full>
-      <Box flex={"grow"} background={"light-3"}>
+      <Box flex={"grow"}>
         <Router>
-          <Box>
+          {/* <Box>
             <nav>
               <ul style={{ listStyleType: "none" }}>
                 <Box direction={"row"} gap={"small"}>
@@ -27,7 +27,7 @@ function App() {
                 </Box>
               </ul>
             </nav>
-          </Box>
+          </Box> */}
 
           <Box flex={"grow"} pad={"medium"}>
             <Switch>

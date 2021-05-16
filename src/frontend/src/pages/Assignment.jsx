@@ -1,8 +1,18 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Box, Heading, Button } from "grommet";
+import { Box, Heading, Button, Avatar, Text } from "grommet";
 import { Stage, Layer, Image, Circle, Rect } from "react-konva";
 import useImage from "use-image";
 import FormBuilder from "../components/FormBuilder";
+
+const participants = [
+  { name: "red boy", avatar_color: "#85c4f7" },
+  { name: "green girraffe", avatar_color: "#8fd9a7" },
+  { name: "aqua mike", avatar_color: "#25c4a9" },
+  { name: "cyan ten", avatar_color: "#15b4c8" },
+  { name: "magenta hotel", avatar_color: "#85a4d2" },
+  { name: "pink xylophone", avatar_color: "#85e4f1" },
+  { name: "purple perish", avatar_color: "#85d4c2" },
+];
 
 const url =
   "https://images.unsplash.com/photo-1620416417410-5e467e5dbd25?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib";
@@ -166,6 +176,22 @@ const Assignment = () => {
   return (
     <Box fill>
       <Heading>Assignment</Heading>
+      <Box
+        className="participants"
+        direction={"row-responsive"}
+        gap={"xxsmall"}
+      >
+        {participants.map((participant, ix) => (
+          <Avatar key={ix} background={participant.avatar_color} size={"small"}>
+            <Text size={"xsmall"}>
+              {participant.name
+                .split(" ")
+                .map((word) => word[0])
+                .join("")}
+            </Text>
+          </Avatar>
+        ))}
+      </Box>
       <Box direction={"row-responsive"} fill>
         <Box ref={boxRef} fill background={"light-4"} overflow={"hidden"}>
           {stageDimensions && (

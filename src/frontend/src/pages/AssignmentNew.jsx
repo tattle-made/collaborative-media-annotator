@@ -8,8 +8,10 @@ import { api_url } from "../config/default.json";
 import { sampleSchema, samplePostUrls } from "../config/sample-exercise-data";
 import { useStore } from "../store/global";
 import MultiUserSelect from "../components/MultiUserSelect";
+import { useHistory } from "react-router-dom";
 
 const AssignmentNew = () => {
+  const history = useHistory();
   const setUsers = useStore((state) => state.setUsers);
   const users = useStore((state) => state.users);
 
@@ -39,7 +41,12 @@ const AssignmentNew = () => {
         post_urls: postUrls,
         participants,
       });
-      console.log({ res });
+      if (res.status === 200) {
+        // navigate to new page
+        history.push("/exercises");
+      } else {
+        console.log({ res });
+      }
 
       // console.log({
       //   exerciseName,
@@ -72,27 +79,31 @@ const AssignmentNew = () => {
 
         <Heading level={2}> Image Urls</Heading>
 
-        <JSONInput
-          id="posts"
-          placeholder={samplePostUrls}
-          locale={locale}
-          colors={theme.light_mitsuketa_tribute}
-          width="100%"
-          height={"fit-content"}
-          onChange={(data) => setPostUrls(data.jsObject)}
-        />
+        <Box border={{ color: "light-5" }} round={"xsmall"} overflow={"hidden"}>
+          <JSONInput
+            id="posts"
+            placeholder={samplePostUrls}
+            locale={locale}
+            colors={theme.light_mitsuketa_tribute}
+            width="100%"
+            height={"fit-content"}
+            onChange={(data) => setPostUrls(data.jsObject)}
+          />
+        </Box>
 
         <Heading level={2}> Form Schema</Heading>
 
-        <JSONInput
-          id="schema"
-          placeholder={sampleSchema}
-          locale={locale}
-          colors={theme.light_mitsuketa_tribute}
-          width="100%"
-          height={"fit-content"}
-          onChange={(data) => setExerciseSchema(data.jsObject)}
-        />
+        <Box border={{ color: "light-5" }} round={"xsmall"} overflow={"hidden"}>
+          <JSONInput
+            id="schema"
+            placeholder={sampleSchema}
+            locale={locale}
+            colors={theme.light_mitsuketa_tribute}
+            width="100%"
+            height={"fit-content"}
+            onChange={(data) => setExerciseSchema(data.jsObject)}
+          />
+        </Box>
 
         <Heading level={2}> Participants</Heading>
 

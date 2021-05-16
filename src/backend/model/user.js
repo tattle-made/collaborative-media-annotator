@@ -9,6 +9,7 @@ const { redis } = require("../core/redis");
 const { nanoid } = require("nanoid");
 
 const Schema = Joi.object({
+	id: Joi.string().min(1).max(50),
 	name: Joi.string().min(3).max(25),
 	avatar_color: Joi.string().regex(/^#[A-Fa-f0-9]{6}$/),
 });
@@ -21,6 +22,7 @@ const Schema = Joi.object({
  * 	user.InstanceFactory({avatar_color: "#6483f4"});
  */
 async function InstanceFactory({
+	id = `${nanoid()}`,
 	name = uniqueNamesGenerator({
 		dictionaries: [colors, names],
 		separator: " ",
@@ -28,7 +30,7 @@ async function InstanceFactory({
 	}),
 	avatar_color = randomColor({ hue: "blue" }),
 } = {}) {
-	const obj = { name, avatar_color };
+	const obj = { id, name, avatar_color };
 	try {
 		const validatedObj = await Schema.validateAsync(obj);
 		return validatedObj;
@@ -38,13 +40,10 @@ async function InstanceFactory({
 }
 
 async function save(user) {
-	console.log("saving user in redis", user);
-	const id = nanoid();
 	try {
-		const result = await redis.hset(`user:${id}`, user);
-		connsole.log({ id, result });
+		const result = await redis.hset(`user:${user.id}`, user);
 	} catch (err) {
-		throw `Could not save user in Redis ${user}`;
+		throw `Could not save user in Redis ${user}. ${err}`;
 	}
 }
 

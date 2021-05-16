@@ -8,7 +8,7 @@ const createUsers = async () => {
 		try {
 			await user.save(userInstance);
 		} catch (err) {
-			console.log(err);
+			console.log(`Error : could not create users. ${err}`);
 		}
 		users.push(userInstance);
 	}
