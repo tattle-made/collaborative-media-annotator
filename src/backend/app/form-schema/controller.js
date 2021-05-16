@@ -1,18 +1,12 @@
-const flatten = require("flatten");
-const schema = require("../../model/form-schema");
-const {
-	text,
-	number,
-	date,
-	singleselect,
-	multiselect,
-} = require("./model/fields");
+const Redis = require("ioredis");
+const { RedisUtils } = require("../../core/redis");
 
-async function create({ schemaJson }) {
-	console.log(schema);
+async function create(schemaJson, key) {
 	// create a schema instance with schemaJson
 	// validated it
 	// flatten it
 	// save it
-	console.log(flatten({ schema }, { delimiter: ":" }));
+	return RedisUtils.saveJSON(schemaJson, key);
 }
+
+module.exports = { create };

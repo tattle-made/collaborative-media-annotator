@@ -40,7 +40,7 @@ function App() {
               <Route path="/exercises/new" exact>
                 <AssignmentNew />
               </Route>
-              <Route path="/exercise">
+              <Route path="/exercise/:exerciseId">
                 <Assignment />
               </Route>
             </Switch>

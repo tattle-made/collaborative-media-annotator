@@ -3,6 +3,9 @@ import { Box, Heading, Button, Avatar, Text } from "grommet";
 import { Stage, Layer, Image, Circle, Rect } from "react-konva";
 import useImage from "use-image";
 import FormBuilder from "../components/FormBuilder";
+import { useParams } from "react-router-dom";
+import axios from "axios";
+import { api_url } from "../config/default.json";
 
 const participants = [
   { name: "red boy", avatar_color: "#85c4f7" },
@@ -70,6 +73,7 @@ const AnnotationForm = () => {
 const Assignment = () => {
   const boxRef = useRef(null);
   const stageRef = useRef(null);
+  let { exerciseId } = useParams();
   const [image, setImage] = useImage(url);
   const [stageDimensions, setStageDimensions] = useState(undefined);
   const [scaledImage, setScaledImage] = useState(undefined);
@@ -81,6 +85,15 @@ const Assignment = () => {
     end: undefined,
   });
   const [rectangles, setRectangles] = useState([]);
+
+  useEffect(async () => {
+    // effect
+    console.log("LOADING ASSIGNMENT");
+    console.log(exerciseId);
+    const exerciseRes = (await axios.get(`${api_url}/exercise/${exerciseId}`))
+      .data;
+    console.log(exerciseRes);
+  }, []);
 
   useEffect(() => {
     if (boxRef.current) {
